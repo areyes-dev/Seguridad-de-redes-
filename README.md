@@ -40,10 +40,8 @@ La topología está compuesta por:
 El repositorio contiene capturas de la topología, configuraciones realizadas y pruebas de funcionamiento de los controles de seguridad.
 
 ## Documentación
+La documentación completa del laboratorio se encuentra en el archivo Informe II de Seguridad de Redes.pdf, donde se incluyen el propósito, el diagrama de la infraestructura, las imágenes de evidencia y las comprobaciones realizadas.
 
-La documentación completa del laboratorio se encuentra dentro de la carpeta `Informe II de Seguridad de Redes`.
-
-También se incluyen los diagramas, imágenes utilizadas como evidencia, configuraciones y scripts correspondientes a la práctica.
 
 ## Autor
 
