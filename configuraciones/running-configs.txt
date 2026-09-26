@@ -1,0 +1,129 @@
+COMANDOS UTILIZADOS - PRÁCTICA DE SEGURIDAD DE REDES
+
+CLIENTE - VLAN 10 / DHCP / PRUEBAS
+ip -br addr
+ip route
+nmcli device status
+sudo nmcli device connect ens3
+ping -c 4 10.21.76.1
+nc -vz -w 5 10.21.76.130 443
+nc -vz -w 5 10.21.76.146 3306
+curl -k -v "https://10.21.76.130/?id=1%20OR%201=1"
+
+WEB-SERVER - CONFIGURACIÓN DE RED
+sudo ip addr add 10.21.76.130/28 dev ens3
+sudo ip link set ens3 up
+sudo ip route replace default via 10.21.76.129
+sudo resolvectl dns ens3 8.8.8.8 1.1.1.1
+ip -br addr
+ip route
+ping -c 4 10.21.76.129
+
+WEB-SERVER - SERVICIO HTTPS
+sudo apt update
+sudo apt install nginx openssl -y
+sudo nginx -t
+sudo systemctl restart nginx
+sudo systemctl status nginx --no-pager
+sudo ss -ltnp | grep :443
+
+WEB-SERVER - PRUEBAS HACIA DB-SERVER
+nc -vz -w 5 10.21.76.146 3306
+nc -vz -w 5 10.21.76.146 22
+
+DB-SERVER - CONFIGURACIÓN DE RED
+sudo ip addr flush dev ens3
+sudo ip addr add 10.21.76.146/28 dev ens3
+sudo ip link set ens3 up
+sudo ip route replace default via 10.21.76.145 dev ens3
+sudo resolvectl dns ens3 8.8.8.8 1.1.1.1
+ip -br addr
+ip route
+ping -c 4 10.21.76.145
+
+DB-SERVER - MYSQL / MARIADB
+sudo apt update
+sudo apt install mariadb-server -y
+grep -n "bind-address" /etc/mysql/mariadb.conf.d/50-server.cnf
+sudo systemctl restart mariadb
+sudo systemctl status mariadb --no-pager
+sudo ss -ltnp | grep :3306
+
+SWITCH - VLAN
+enable
+configure terminal
+hostname SW-L2
+vlan 10
+ name USUARIOS
+vlan 20
+ name WEB
+vlan 30
+ name DB
+
+SWITCH - TRUNK HACIA FORTIGATE
+interface GigabitEthernet0/0
+description TRUNK-HACIA-FORTIGATE
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk allowed vlan 10,20,30
+switchport nonegotiate
+no shutdown
+
+SWITCH - CLIENTE VLAN 10
+interface GigabitEthernet0/1
+description CLIENTE-VLAN10
+switchport mode access
+switchport access vlan 10
+spanning-tree portfast
+spanning-tree bpduguard enable
+switchport port-security
+switchport port-security maximum 1
+switchport port-security mac-address sticky
+switchport port-security violation shutdown
+no shutdown
+
+SWITCH - WEB-SERVER VLAN 20
+interface GigabitEthernet0/2
+description WEB-SERVER-VLAN20
+switchport mode access
+switchport access vlan 20
+spanning-tree portfast
+spanning-tree bpduguard enable
+switchport port-security
+switchport port-security maximum 1
+switchport port-security mac-address sticky
+switchport port-security violation shutdown
+no shutdown
+
+SWITCH - DB-SERVER VLAN 30
+interface GigabitEthernet0/3
+description DB-SERVER-VLAN30
+switchport mode access
+switchport access vlan 30
+spanning-tree portfast
+spanning-tree bpduguard enable
+switchport port-security
+switchport port-security maximum 1
+switchport port-security mac-address sticky
+switchport port-security violation shutdown
+no shutdown
+
+SWITCH - GUARDAR CONFIGURACIÓN
+end
+write memory
+
+SWITCH - COMANDOS DE VERIFICACIÓN
+enable
+terminal length 0
+show vlan brief
+show interfaces trunk
+show port-security
+show port-security interface gi0/1
+show port-security interface gi0/2
+show port-security interface gi0/3
+show interfaces status
+show running-config
+
+FORTIGATE - VERIFICACIÓN DE CONFIGURACIÓN
+show
+show full-configuration
