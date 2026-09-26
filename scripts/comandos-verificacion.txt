@@ -1,0 +1,42 @@
+COMANDOS DE VERIFICACIÓN
+
+
+CLIENTE
+
+ip -br addr
+ip route
+ping -c 4 10.21.76.1
+
+nc -vz -w 5 10.21.76.130 443
+
+nc -vz -w 5 10.21.76.146 3306
+
+
+WEB-SERVER
+
+nc -vz -w 5 10.21.76.146 3306
+
+nc -vz -w 5 10.21.76.146 22
+
+sudo ss -ltnp | grep :443
+
+curl -k -v "https://10.21.76.130/?id=1%20OR%201=1"
+
+
+DB-SERVER
+
+sudo ss -ltnp | grep :3306
+
+sudo systemctl status mariadb --no-pager
+
+
+SWITCH
+
+enable
+show vlan brief
+show interfaces trunk
+show port-security
+show port-security interface gi0/1
+show port-security interface gi0/2
+show port-security interface gi0/3
+show interfaces status
