@@ -41,7 +41,7 @@ El repositorio contiene capturas de la topología, configuraciones realizadas y 
 
 ## Documentación
 
-La documentación completa del laboratorio se encuentra dentro de la carpeta `documentacion`.
+La documentación completa del laboratorio se encuentra dentro de la carpeta `Informe II de Seguridad de Redes`.
 
 También se incluyen los diagramas, imágenes utilizadas como evidencia, configuraciones y scripts correspondientes a la práctica.
 
